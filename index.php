@@ -48,6 +48,19 @@ $tasks = [
     ]
 ];
 
+function number_of_tasks ($tasks, $project) {
+    $count = 0;
+    foreach ($tasks as $task) {
+        if ($project === "Все") {
+            $count = count($tasks);
+        }
+        if ($task["category"] === $project) {
+            $count++;
+        }
+    }
+    return $count;
+}
+
 // показывать или нет выполненные задачи
 $show_complete_tasks = rand(0, 1);
 ?>
@@ -98,7 +111,7 @@ $show_complete_tasks = rand(0, 1);
                      <?php foreach ($projects as $key => $project): ?>
                         <li class="main-navigation__list-item <?php if ($key === 0) echo "main-navigation__list-item--active"; ?>">
                                 <a class="main-navigation__list-item-link" href="#"><?=$project;?></a>
-                                <span class="main-navigation__list-item-count"><?=$key;?></span>
+                                <span class="main-navigation__list-item-count"><?= number_of_tasks($tasks, $project); ?></span>
                             </li>
                         <?php endforeach; ?>
                     </ul>
