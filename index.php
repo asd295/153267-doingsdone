@@ -67,6 +67,17 @@ function number_of_tasks ($tasks, $project) {
     return $count;
 }
 
+function calc_time ($date) {
+    $current_timestamp = time();
+    $task_timestamp = strtotime($date);
+    $seconds_in_day = 86400;
+    $difference = floor(($task_timestamp - $current_timestamp) / $seconds_in_day);
+    if ($difference < 1) {
+        return true;
+    }
+    return false;
+}
+
 $page = renderTemplate("templates/index.php", [
         "show_complete_tasks" => $show_complete_tasks,
         "tasks" => $tasks

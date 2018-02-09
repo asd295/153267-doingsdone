@@ -2,12 +2,15 @@
 
 function renderTemplate($template, $data) {
 
-	if (file_exists($template)) {
+	$output = "";
+	if(file_exists($template)) {
+	ob_start('ob_gzhandler');
 	extract($data);
-	ob_start();
 	require_once($template);
-	return ob_get_clean();
-	}
-	return "";
-	}
+	$output = ob_get_contents();
+	ob_end_clean();
+}
+	return $output;
+}
+	
 ?>
