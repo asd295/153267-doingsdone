@@ -67,6 +67,8 @@ function number_of_tasks ($tasks, $project) {
     return $count;
 }
 
+
+
 $page = renderTemplate("templates/index.php", [
         "show_complete_tasks" => $show_complete_tasks,
         "tasks" => $tasks
