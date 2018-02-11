@@ -44,7 +44,7 @@
                     <ul class="main-navigation__list">
                      <?php foreach ($projects as $key => $project): ?>
                         <li class="main-navigation__list-item <?php if ($key === 0) echo "main-navigation__list-item--active"; ?>">
-                                <a class="main-navigation__list-item-link" href="<?= "?id=$key" ?>">
+                                <a class="main-navigation__list-item-link" href="<?="?id=$key"?>">
                                     <?= htmlspecialchars($project); ?></a>
                                 <span class="main-navigation__list-item-count"><?= number_of_tasks($tasks, $project); ?></span>
                             </li>
