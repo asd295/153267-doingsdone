@@ -1,3 +1,4 @@
+
 <?php
 require ('functions.php');
 
@@ -77,9 +78,32 @@ function calc_time ($date) {
     return false;
 }
 
+if (isset($_GET["id"])) {
+    $project_tasks = [];
+    $project_id = $_GET["id"];
+    $projects_last_id = count($projects) - 1;
+    if ($project_id === "0") {
+        $project_tasks = $tasks;
+    } elseif ($project_id > $projects_last_id) {
+        http_response_code(404);
+    } else {
+        foreach ($tasks as $key => $task) {
+            if ($projects[$project_id] === $task["category"]) {
+                $project_tasks[] = $tasks[$key];
+                
+            }
+        }
+    }
+} else {
+    $project_tasks = $tasks;
+}
+
+
 $page = renderTemplate("templates/index.php", [
         "show_complete_tasks" => $show_complete_tasks,
-        "tasks" => $tasks
+        "tasks" => $tasks,
+        "project_tasks" => $project_tasks
+
 ]);
 
 $layout = renderTemplate("templates/layout.php", [

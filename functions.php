@@ -1,7 +1,5 @@
 <?php
-
 function renderTemplate($template, $data) {
-
 	$output = "";
 	if(file_exists($template)) {
 	ob_start('ob_gzhandler');
