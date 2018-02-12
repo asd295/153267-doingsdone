@@ -1,4 +1,5 @@
 <div class="modal">
+
   <button class="modal__close" type="button" name="button">Закрыть</button>
 
   <h2 class="modal__heading">Добавление задачи</h2>
