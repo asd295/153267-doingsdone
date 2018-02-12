@@ -26,7 +26,9 @@
 
                 <table class="tasks">
                     <?php foreach ($tasks as $key => $task): ?>
-                        <tr class="tasks__item task  <?=($task["realized"]) ? "task--completed" : ""; ?>">
+                        <tr class="tasks__item task  <?=($task["realized"]) ? "task--completed" : ""; ?>
+                                   <?= calc_time($task["date"]) ? "task--important" : ""; ?>">
+
                             <td class="task__select">
                                 <label class="checkbox task__checkbox">
                                     <input
