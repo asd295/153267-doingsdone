@@ -1,5 +1,4 @@
-
-                <h2 class="content__main-heading">Список задач</h2>
+ <h2 class="content__main-heading">Список задач</h2>
 
                 <form class="search-form" action="index.html" method="post">
                     <input class="search-form__input" type="text" name="" value="" placeholder="Поиск по задачам">
@@ -18,24 +17,29 @@
                     <label class="checkbox">
                         <a href="/">
                             <!--добавить сюда аттрибут "checked", если переменная $show_complete_tasks равна единице-->
-                            <input class="checkbox__input visually-hidden" type="checkbox" <?php if ($show_complete_tasks == 1) print ("checked"); ?>>
+                            <input class="checkbox__input visually-hidden" type="checkbox" <?= ($show_complete_tasks === 1) ? "checked" : ""; ?>>
                             <span class="checkbox__text">Показывать выполненные</span>
                         </a>
                     </label>
                 </div>
 
                 <table class="tasks">
-                    <?php foreach ($tasks as $key => $task): ?>
-                        <tr class="tasks__item task  <?=($task["realized"]) ? "task--completed" : ""; ?>">
+                    <?php foreach ($project_tasks as $task): ?>
+                        <tr class="tasks__item task  <?=($task["realized"]) ? "task--completed" : ""; ?>
+                                   <?= calc_time($task["date"]) ? "task--important" : ""; ?>">
                             <td class="task__select">
                                 <label class="checkbox task__checkbox">
                                     <input
                                         class="checkbox__input visually-hidden"
-                                        type="checkbox"
-                                        <?=($task["realized"]) ? "checked" : ""; ?>>
-                                    <span class="checkbox__text"><?=$task["task"];?></span>
+                                        type="checkbox"<?=($task["realized"]) ? "checked" : ""; ?>>
+                                    <span class="checkbox__text"><?= htmlspecialchars($task["task"]); ?></span>
                                 </label>
                             </td>
+                            <td class="task__file">
+                <?php if (!empty($task["file_name"])): ?>
+                    <a class="download-link" href="<?= $task["file_url"]; ?>"><?= $task["file_name"]; ?></a>
+                <?php endif; ?>
+            </td>
                             <td class="task__date"><?=$task["date"];?></td>
                             <td class="task__controls"></td>
                         </tr>
