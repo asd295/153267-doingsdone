@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body><!--class="overlay"-->
+<body class="<?= (isset($add_task)) ? "overlay" : "" ?>"><!--class="overlay"-->
 <h1 class="visually-hidden">Дела в порядке</h1>
 
 <div class="page-wrapper">
@@ -19,7 +19,7 @@
             </a>
 
             <div class="main-header__side">
-                <a class="main-header__side-item button button--plus" href="#">Добавить задачу</a>
+                <a class="main-header__side-item button button--plus" href="<?= "?add_task"; ?>">Добавить задачу</a>
 
                 <div class="main-header__side-item user-menu">
                     <div class="user-menu__image">
@@ -44,7 +44,8 @@
                     <ul class="main-navigation__list">
                      <?php foreach ($projects as $key => $project): ?>
                         <li class="main-navigation__list-item <?php if ($key === 0) echo "main-navigation__list-item--active"; ?>">
-                                <a class="main-navigation__list-item-link" href="#"><?=$project;?></a>
+                                <a class="main-navigation__list-item-link" href="<?="?id=$key"?>">
+                                    <?= htmlspecialchars($project); ?></a>
                                 <span class="main-navigation__list-item-count"><?= number_of_tasks($tasks, $project); ?></span>
                             </li>
                         <?php endforeach; ?>
@@ -56,6 +57,7 @@
 
             <main class="content__main">
                 <?= $content; ?>
+                <?= $add_task; ?>
             </main>
         </div>
     </div>
