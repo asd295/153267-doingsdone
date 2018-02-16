@@ -144,6 +144,13 @@ function upload_file ($file) {
     return $file_url;
 }
 
+if (isset($_COOKIE["showcompl"])) {
+    $show_complete_tasks = ($_COOKIE["showcompl"] == 1) ? 0 : 1;
+}
+if (isset($_GET["show_completed"])) {
+    setcookie("showcompl", $show_complete_tasks, strtotime("+30 days"), "/");
+    header("Location: " . $_SERVER["HTTP_REFERER"]);
+}
 
 
 $page = renderTemplate("templates/index.php", [
