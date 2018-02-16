@@ -15,7 +15,7 @@
                     </nav>
 
                     <label class="checkbox">
-                        <a href="/">
+                        <a href="<?= "?show_completed" ?>">
                             <!--добавить сюда аттрибут "checked", если переменная $show_complete_tasks равна единице-->
                             <input class="checkbox__input visually-hidden" type="checkbox" <?= ($show_complete_tasks === 1) ? "checked" : ""; ?>>
                             <span class="checkbox__text">Показывать выполненные</span>
@@ -32,7 +32,9 @@
                                     <input
                                         class="checkbox__input visually-hidden"
                                         type="checkbox"<?=($task["realized"]) ? "checked" : ""; ?>>
-                                    <span class="checkbox__text"><?= htmlspecialchars($task["task"]); ?></span>
+                                    <span class="checkbox__text">
+                                        <?= htmlspecialchars($task["task"]); ?>
+                                    </span>
                                 </label>
                             </td>
                             <td class="task__file">
