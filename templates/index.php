@@ -32,7 +32,9 @@
                                     <input
                                         class="checkbox__input visually-hidden"
                                         type="checkbox"<?=($task["realized"]) ? "checked" : ""; ?>>
-                                    <span class="checkbox__text"><?= htmlspecialchars($task["task"]); ?></span>
+                                    <span class="checkbox__text">
+                                        <?= htmlspecialchars($task["task"]); ?>
+                                    </span>
                                 </label>
                             </td>
                             <td class="task__file">

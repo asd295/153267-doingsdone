@@ -2,6 +2,9 @@
 require ('functions.php');
 // показывать или нет выполненные задачи
 $show_complete_tasks = rand(0, 1);
+$project_id = 0;
+$add_task = null;
+
 $projects = [
     "Все",
     "Входящие",
@@ -39,13 +42,13 @@ $tasks = [
     ],
     [
         "task" => "Купить корм для кота",
-        "date" => "",
+        "date" => "01.02.2018",
         "category" => $projects[4],
         "realized" => false
     ],
     [
         "task" => "Заказать пиццу",
-        "date" => "",
+        "date" => "08.02.2018",
         "category" => $projects[4],
         "realized" => false
     ]
