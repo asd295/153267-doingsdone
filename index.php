@@ -52,6 +52,8 @@ $tasks = [
 ];
 
 
+
+
 if (isset($_GET["add_task"])) {
     $add_task = renderTemplate("templates/modal-task.php", [
         "projects" => array_slice($projects, 1)
