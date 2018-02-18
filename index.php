@@ -1,7 +1,10 @@
 <?php
 require ('functions.php');
+require_once("userdata.php");
 // показывать или нет выполненные задачи
 $show_complete_tasks = rand(0, 1);
+$add_task = null;
+
 $projects = [
     "Все",
     "Входящие",
@@ -10,7 +13,7 @@ $projects = [
     "Домашние дела",
     "Авто"
 ];
-$add_task = null;
+
 
 $tasks = [
     [
@@ -160,13 +163,38 @@ $page = renderTemplate("templates/index.php", [
         "tasks" => $tasks,
         "project_tasks" => $project_tasks
 ]);
+
+
+session_start();
+if (isset($_SESSION["user"])) {
+    if (http_response_code() === 404) {
+        $page = renderTemplate("templates/404.php", [
+            "message" => $message
+        ]);
+    } else {
+        $page = renderTemplate("templates/index.php", [
+            "project_tasks" => $project_tasks,
+            "show_complete_tasks" => $show_complete_tasks
+        ]);
+    }
+} else {
+    $page = renderTemplate("templates/guest.php", []);
+    if (isset($_GET["login"])) {
+        $add_task = renderTemplate("templates/modal-auth.php", []);
+    }
+}
+
+
+
+
 $layout = renderTemplate("templates/layout.php", [
-        "title" => "Дела в порядке",
-        "content" => $page,
-        "projects" => $projects,
-        "tasks" => $tasks,
-        "add_task" => $add_task
+    "title" => "Дела в порядке",
+    "content" => $page,
+    "add_task" => $add_task,
+    "projects" => $projects,
+    "tasks" => $tasks
 ]);
+
 print($layout);
 ?>
 
