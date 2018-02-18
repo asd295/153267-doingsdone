@@ -26,15 +26,13 @@
                 <table class="tasks">
                     <?php foreach ($project_tasks as $task): ?>
                         <tr class="tasks__item task  <?=($task["realized"]) ? "task--completed" : ""; ?>
-                                   <?= calc_time($task["date"]) ? "task--important" : ""; ?>">
+                                                    <?= calc_time($task["date"]) ? "task--important" : ""; ?>">
                             <td class="task__select">
                                 <label class="checkbox task__checkbox">
                                     <input
                                         class="checkbox__input visually-hidden"
                                         type="checkbox"<?=($task["realized"]) ? "checked" : ""; ?>>
-                                    <span class="checkbox__text">
-                                        <?= htmlspecialchars($task["task"]); ?>
-                                    </span>
+                                    <span class="checkbox__text"><?= htmlspecialchars($task["task"]); ?></span>
                                 </label>
                             </td>
                             <td class="task__file">
