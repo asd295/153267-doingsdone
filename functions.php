@@ -10,5 +10,7 @@ function renderTemplate($template, $data) {
 }
 	return $output;
 }
+
+
 	
 ?>
