@@ -1,4 +1,4 @@
- <h2 class="content__main-heading">Список задач</h2>
+<h2 class="content__main-heading">Список задач</h2>
 
                 <form class="search-form" action="index.html" method="post">
                     <input class="search-form__input" type="text" name="" value="" placeholder="Поиск по задачам">
@@ -17,7 +17,8 @@
                     <label class="checkbox">
                         <a href="<?= "?show_completed" ?>">
                             <!--добавить сюда аттрибут "checked", если переменная $show_complete_tasks равна единице-->
-                            <input class="checkbox__input visually-hidden" type="checkbox" <?= ($show_complete_tasks === 1) ? "checked" : ""; ?>>
+                            <input class="checkbox__input visually-hidden" type="checkbox" 
+                            <?= ($show_complete_tasks) ? "checked" : ""; ?>>
                             <span class="checkbox__text">Показывать выполненные</span>
                         </a>
                     </label>
@@ -57,3 +58,4 @@
                         </tr>
                     <?php endforeach; ?>
                 </table>
+

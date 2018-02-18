@@ -1,7 +1,11 @@
 <?php
 require ('functions.php');
+require_once("userdata.php");
 // показывать или нет выполненные задачи
 $show_complete_tasks = rand(0, 1);
+$add_task = null;
+$project_id = 0;
+
 $projects = [
     "Все",
     "Входящие",
@@ -10,7 +14,7 @@ $projects = [
     "Домашние дела",
     "Авто"
 ];
-$add_task = null;
+
 
 
 
@@ -52,6 +56,8 @@ $tasks = [
         "realized" => false
     ]
 ];
+
+
 
 
 if (isset($_GET["add_task"])) {
@@ -136,15 +142,7 @@ if (isset($_GET["id"])) {
     $project_tasks = $tasks;
 }
 
-function upload_file ($file) {
-    if (isset($file["name"])) {
-        $file_name = $file["name"];
-        $file_path = __DIR__ . "/uploads/";
-        $file_url = "$file_path" . $file_name;
-        move_uploaded_file($file["tmp_name"], $file_path . $file_name);
-    }
-    return $file_url;
-}
+
 
 if (isset($_COOKIE["showcompl"])) {
     $show_complete_tasks = ($_COOKIE["showcompl"] == 1) ? 0 : 1;
@@ -154,7 +152,18 @@ if (isset($_GET["show_completed"])) {
     header("Location: " . $_SERVER["HTTP_REFERER"]);
 }
 
+function search_user_by_email($users, $email) {
+    $found_user = null;
+    foreach ($users as $user) {
+        if ($user["email"] === $email) {
+            $found_user = $user;
+            break;
+        }
+    }
+    return $found_user;
+}
 
+<<<<<<< HEAD
 function calc_time ($date) {
     $current_timestamp = time();
     $task_timestamp = strtotime($date);
@@ -196,13 +205,78 @@ $page = renderTemplate("templates/index.php", [
 =======
 >>>>>>> b5a93e5c08dde5b30f19c1652bb03345b710ced9
 ]);
-$layout = renderTemplate("templates/layout.php", [
-        "title" => "Дела в порядке",
-        "content" => $page,
-        "projects" => $projects,
+=======
+session_start();
+if (isset($_SESSION["user"])) {
+    if (http_response_code() === 404) {
+        $page = renderTemplate("templates/404.php", [
+            "message" => $message
+        ]);
+    } else {
+        $page = renderTemplate("templates/index.php", [
+        "show_complete_tasks" => $show_complete_tasks,
         "tasks" => $tasks,
-        "add_task" => $add_task
+        "project_tasks" => $project_tasks
+        ]);
+    }
+} else {
+    $page = renderTemplate("templates/guest.php", []);
+    if (isset($_GET["login"])) {
+        $add_task = renderTemplate("templates/modal-auth.php", []);
+    }
+
+    if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["login"])) {
+        $errors = [];
+        $required_fields = [
+            "email",
+            "password"
+        ];
+        $user = search_user_by_email($users, $_POST["email"]);
+        foreach ($required_fields as $field) {
+            if (empty($_POST[$field])) {
+                $errors[$field] = "Поле обязательно для заполнения";
+            }
+        }
+        if (!empty($_POST["email"]) && !filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)) {
+            $errors["email"] = "E-mail введён некорректно";
+        } elseif (!empty($_POST["email"]) && !$user) {
+            $errors["email"] = "Пользователь не найден";
+        }
+        if (!empty($_POST["password"]) && !password_verify($_POST["password"], $user["password"])) {
+            $errors["password"] = "Пароль введён неверно";
+        }
+        if (count($errors)) {
+            $add_task = renderTemplate("templates/modal-auth.php", [
+                "errors" => $errors
+            ]);
+        } else {
+            $_SESSION["user"] = $user;
+            $page = renderTemplate("templates/index.php", [
+                "project_tasks" => $project_tasks,
+                "show_complete_tasks" => $show_complete_tasks
+            ]);
+        }
+    }
+}
+
+
+
+if (isset($_GET["logout"])) {
+    require_once("logout.php");
+}
+
+
+
+>>>>>>> 64decc933e4c99dbc78e594faaef3c2549e39c0e
+$layout = renderTemplate("templates/layout.php", [
+    "title" => "Дела в порядке",
+    "content" => $page,
+    "add_task" => $add_task,
+    "projects" => $projects,
+    "tasks" => $tasks,
+    "project_id" => $project_id
 ]);
+
 print($layout);
 ?>
 
