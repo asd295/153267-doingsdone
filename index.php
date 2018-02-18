@@ -16,8 +16,6 @@ $projects = [
 ];
 
 
-
-
 $tasks = [
     [
         "task" => "Собеседование в IT компании",
@@ -163,49 +161,6 @@ function search_user_by_email($users, $email) {
     return $found_user;
 }
 
-<<<<<<< HEAD
-function calc_time ($date) {
-    $current_timestamp = time();
-    $task_timestamp = strtotime($date);
-    $seconds_in_day = 86400;
-    $difference = floor(($task_timestamp - $current_timestamp) / $seconds_in_day);
-    if ($difference < 1) {
-        return true;
-    }
-    return false;
-}
-
-if (isset($_GET["id"])) {
-    $project_tasks = [];
-    $project_id = $_GET["id"];
-    $projects_last_id = count($projects) - 1;
-    if ($project_id === "0") {
-        $project_tasks = $tasks;
-    } elseif ($project_id > $projects_last_id) {
-        http_response_code(404);
-    } else {
-        foreach ($tasks as $key => $task) {
-            if ($projects[$project_id] === $task["category"]) {
-                $project_tasks[] = $tasks[$key];
-                
-            }
-        }
-    }
-} else {
-    $project_tasks = $tasks;
-}
-
-
-$page = renderTemplate("templates/index.php", [
-        "show_complete_tasks" => $show_complete_tasks,
-        "tasks" => $tasks,
-        "project_tasks" => $project_tasks
-<<<<<<< HEAD
-
-=======
->>>>>>> b5a93e5c08dde5b30f19c1652bb03345b710ced9
-]);
-=======
 session_start();
 if (isset($_SESSION["user"])) {
     if (http_response_code() === 404) {
@@ -267,7 +222,6 @@ if (isset($_GET["logout"])) {
 
 
 
->>>>>>> 64decc933e4c99dbc78e594faaef3c2549e39c0e
 $layout = renderTemplate("templates/layout.php", [
     "title" => "Дела в порядке",
     "content" => $page,

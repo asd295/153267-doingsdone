@@ -32,20 +32,8 @@
                                 <label class="checkbox task__checkbox">
                                     <input
                                         class="checkbox__input visually-hidden"
-<<<<<<< HEAD
-                                        type="checkbox"
-                                        <?=($task["realized"]) ? "checked" : ""; ?>>
-                                    <span class="checkbox__text"><?= htmlspecialchars($task["task"]); ?></span>
-=======
                                         type="checkbox"<?=($task["realized"]) ? "checked" : ""; ?>>
-<<<<<<< HEAD
-                                    <span class="checkbox__text">
-                                        <?= htmlspecialchars($task["task"]); ?>
-                                    </span>
->>>>>>> b5a93e5c08dde5b30f19c1652bb03345b710ced9
-=======
                                     <span class="checkbox__text"><?= htmlspecialchars($task["task"]); ?></span>
->>>>>>> 09e2be339d65827926efc4d60576574d65223ea6
                                 </label>
                             </td>
                             <td class="task__file">
