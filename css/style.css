@@ -517,6 +517,7 @@ a:focus {
 .task--completed .checkbox__input + .checkbox__text {
   font-weight: normal;
   text-decoration: line-through;
+
 }
 
 .task--completed .task__select .checkbox__text {
@@ -777,3 +778,5 @@ a:focus {
 .welcome__text p {
   margin: 20px 0;
 }
+
+

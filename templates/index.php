@@ -1,5 +1,4 @@
-
-                <h2 class="content__main-heading">Список задач</h2>
+ <h2 class="content__main-heading">Список задач</h2>
 
                 <form class="search-form" action="index.html" method="post">
                     <input class="search-form__input" type="text" name="" value="" placeholder="Поиск по задачам">
@@ -16,7 +15,7 @@
                     </nav>
 
                     <label class="checkbox">
-                        <a href="/">
+                        <a href="<?= "?show_completed" ?>">
                             <!--добавить сюда аттрибут "checked", если переменная $show_complete_tasks равна единице-->
                             <input class="checkbox__input visually-hidden" type="checkbox" <?= ($show_complete_tasks === 1) ? "checked" : ""; ?>>
                             <span class="checkbox__text">Показывать выполненные</span>
@@ -32,11 +31,17 @@
                                 <label class="checkbox task__checkbox">
                                     <input
                                         class="checkbox__input visually-hidden"
-                                        type="checkbox"
-                                        <?=($task["realized"]) ? "checked" : ""; ?>>
-                                    <span class="checkbox__text"><?= htmlspecialchars($task["task"]); ?></span>
+                                        type="checkbox"<?=($task["realized"]) ? "checked" : ""; ?>>
+                                    <span class="checkbox__text">
+                                        <?= htmlspecialchars($task["task"]); ?>
+                                    </span>
                                 </label>
                             </td>
+                            <td class="task__file">
+                <?php if (!empty($task["file_name"])): ?>
+                    <a class="download-link" href="<?= $task["file_url"]; ?>"><?= $task["file_name"]; ?></a>
+                <?php endif; ?>
+            </td>
                             <td class="task__date"><?=$task["date"];?></td>
                             <td class="task__controls"></td>
                         </tr>
