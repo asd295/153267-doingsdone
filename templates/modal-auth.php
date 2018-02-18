@@ -1,6 +1,7 @@
 <div class="modal">
+  <a href="index.php">
   <button class="modal__close" type="button" name="button">Закрыть</button>
-
+  </a>
   <h2 class="modal__heading">Вход на сайт</h2>
 
   <form class="form" action="index.html" method="post">
