@@ -12,14 +12,13 @@ function renderTemplate($template, $data) {
 }
 
 function upload_file ($file) {
-    if (isset($file["name"])) {
-        $file_name = $file["name"];
-        $file_path = __DIR__ . "/uploads/";
-        $file_url = $file_path . $file_name;
-        move_uploaded_file($file["tmp_name"], $file_path . $file_name);
-    }
-     
-    return $file_url;
+	if (isset($file["name"])) {
+	$file_name = $file["name"];
+	$file_path = __DIR__ . "/uploads/";
+	$file_url = $file_path . $file_name;
+	move_uploaded_file($file["tmp_name"], $file_path . $file_name);
+	}
+	return $file_url;
 }
 	
 ?>
