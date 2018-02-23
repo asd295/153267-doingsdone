@@ -4,24 +4,35 @@ DEFAULT COLLATE utf8_general_ci;
 USE doingsdone;
 
 CREATE TABLE users (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  signup_date DATETIME,
-  email CHAR,
-  name CHAR,
-  password CHAR,
-  contacts TEXT
+    id int NOT NULL AUTO_INCREMENT,
+    signup_date DATETIME(6) NOT NULL,
+    email varchar(255) NOT NULL UNIQUE,
+    name varchar(255) NOT NULL,
+    password varchar(255) NOT NULL,
+    contacts varchar(255),
+  PRIMARY KEY (id)
 );
+
 
 CREATE TABLE projects (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  name CHAR
+    id int auto_increment primary key,
+    name varchar(255) not null
 );
 
+-- fact_date - дата записи задачи по факту в бд
+-- realized - дата выполнения задачи 
+-- end_date- сроки выполнения задачи до
+
 CREATE TABLE tasks (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  name CHAR,
-  create_date DATETIME,
-  done_date DATETIME,
-  file CHAR,
-  term DATETIME
+    id int auto_increment primary key,
+    project_id int null,
+    user_id int not null,
+    FOREIGN KEY (project_id) REFERENCES projects (id) on delete cascade,
+    FOREIGN KEY (user_id) REFERENCES users (id) on delete cascade,
+    fact_date timestamp default now(),
+    realized timestamp null,
+    name varchar(255) not null,
+    filename varchar(255) null,
+    end_date timestamp null,
+    image_url varchar(255) null
 );
