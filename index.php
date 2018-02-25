@@ -1,10 +1,13 @@
 <?php
+
 require ('functions.php');
-require_once("userdata.php");
+require_once("database.php");
+
 // показывать или нет выполненные задачи
 $show_complete_tasks = rand(0, 1);
 $add_task = null;
 $project_id = 0;
+$PROJECT_ALL_TASKS = 0;
 
 $projects = [
     "Все",
@@ -14,7 +17,6 @@ $projects = [
     "Домашние дела",
     "Авто"
 ];
-
 
 $tasks = [
     [
@@ -54,8 +56,6 @@ $tasks = [
         "realized" => false
     ]
 ];
-
-
 
 
 if (isset($_GET["add_task"])) {
@@ -98,48 +98,22 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 }
 
-function number_of_tasks ($tasks, $project) {
-    $count = 0;
-    foreach ($tasks as $task) {
-        if ($project === "Все") {
-            $count = count($tasks);
-        }
-        if ($task["category"] === $project) {
-            $count++;
-        }
-    }
-    return $count;
-}
-function calc_time ($date) {
-    $current_timestamp = time();
-    $task_timestamp = strtotime($date);
-    $seconds_in_day = 86400;
-    $difference = floor(($task_timestamp - $current_timestamp) / $seconds_in_day);
-    if ($difference < 1) {
-        return true;
-    }
-    return false;
-}
-if (isset($_GET["id"])) {
+
+
+if (isset($_GET["project_id"])) {
+    $project_id = (int) $_GET["project_id"];
     $project_tasks = [];
-    $project_id = $_GET["id"];
-    $projects_last_id = count($projects) - 1;
-    if ($project_id === "0") {
-        $project_tasks = $tasks;
-    } elseif ($project_id > $projects_last_id) {
-        http_response_code(404);
+    if ($project_id === $PROJECT_ALL_TASKS) {
+        $project_tasks = filter_tasks($tasks, $projects[$PROJECT_ALL_TASKS], $show_complete_tasks);
+    } elseif (isset($projects[$project_id])) {
+        $project_tasks = filter_tasks($tasks, $projects[$project_id], $show_complete_tasks);
     } else {
-        foreach ($tasks as $key => $task) {
-            if ($projects[$project_id] === $task["category"]) {
-                $project_tasks[] = $tasks[$key];
-                
-            }
-        }
+        http_response_code(404);
+        $message = "Проектов с таким id не найдено.";
     }
 } else {
-    $project_tasks = $tasks;
+    $project_tasks = filter_tasks($tasks, $projects[$PROJECT_ALL_TASKS], $show_complete_tasks);
 }
-
 
 
 if (isset($_COOKIE["showcompl"])) {
@@ -148,17 +122,6 @@ if (isset($_COOKIE["showcompl"])) {
 if (isset($_GET["show_completed"])) {
     setcookie("showcompl", $show_complete_tasks, strtotime("+30 days"), "/");
     header("Location: " . $_SERVER["HTTP_REFERER"]);
-}
-
-function search_user_by_email($users, $email) {
-    $found_user = null;
-    foreach ($users as $user) {
-        if ($user["email"] === $email) {
-            $found_user = $user;
-            break;
-        }
-    }
-    return $found_user;
 }
 
 session_start();
@@ -174,7 +137,7 @@ if (isset($_SESSION["user"])) {
         "project_tasks" => $project_tasks
         ]);
     }
-} else {
+    } else {
     $page = renderTemplate("templates/guest.php", []);
     if (isset($_GET["login"])) {
         $add_task = renderTemplate("templates/modal-auth.php", []);
@@ -186,7 +149,7 @@ if (isset($_SESSION["user"])) {
             "email",
             "password"
         ];
-        $user = search_user_by_email($users, $_POST["email"]);
+        $user = search_user_by_email($connection, $_POST["email"]);
         foreach ($required_fields as $field) {
             if (empty($_POST[$field])) {
                 $errors[$field] = "Поле обязательно для заполнения";
@@ -214,7 +177,13 @@ if (isset($_SESSION["user"])) {
     }
 }
 
+if (isset($_GET["register"])) {
+    $page = renderTemplate("templates/register.php", []);
+}
 
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["register"])) {
+    require_once("register.php");
+}
 
 if (isset($_GET["logout"])) {
     require_once("logout.php");

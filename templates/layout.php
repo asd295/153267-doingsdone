@@ -9,11 +9,11 @@
 </head>
 
 <body class="<?= (isset($add_task)) ? "overlay" : "" ?>
-            <?= (isset($_SESSION["user"])) ? "" : "body-background"; ?>"> <!--class="overlay"-->
+            <?= (isset($_SESSION["user"]) || isset($_GET["register"]) || isset($_POST["register"])) ? "" : "body-background"; ?>"> <!--class="overlay"-->
 <h1 class="visually-hidden">Дела в порядке</h1>
 
 <div class="page-wrapper">
-    <div class="container <?= (isset($_SESSION["user"])) ? "container--with-sidebar" : ""; ?>">
+    <div class="container <?= (isset($_SESSION["user"]) || isset($_GET["register"]) || isset($_POST["register"])) ? "container--with-sidebar" : ""; ?>">
         <header class="main-header">
             <a href="#">
                 <img src="img/logo.png" width="153" height="42" alt="Логотип Дела в порядке">
@@ -35,9 +35,9 @@
                         <a href="<?= "?logout"; ?>">Выйти</a>
                     </div>
                 </div>
-                 <?php else: ?>
+                 <?php elseif (!isset($_GET["register"]) && !isset($_POST["register"])): ?>
                     <a class="main-header__side-item button button--transparent" href="<?= "?login"; ?>">Войти</a>
-                <?php endif; ?>
+                    <?php endif; ?>
             </div>
         </header>
 
@@ -50,8 +50,9 @@
 
                     <ul class="main-navigation__list">
                      <?php foreach ($projects as $key => $project): ?>
-                        <li class="main-navigation__list-item <?php if ($key === 0) echo "main-navigation__list-item--active"; ?>">
-                                <a class="main-navigation__list-item-link" href="<?="?id=$key"?>">
+                        <li class="main-navigation__list-item 
+                                <?= ($project_id === $key) ? "main-navigation__list-item--active" : ""; ?>">
+                                <a class="main-navigation__list-item-link" href="<?="?project_id=$key"?>">
                                     <?= htmlspecialchars($project); ?></a>
                                 <span class="main-navigation__list-item-count"><?= number_of_tasks($tasks, $project); ?></span>
                             </li>
@@ -61,7 +62,12 @@
 
                 <a class="button button--transparent button--plus content__side-button" href="#">Добавить проект</a>
             </section>
-            <?php endif; ?>
+            <?php elseif (isset($_GET["register"]) || isset($_POST["register"])): ?>
+                        <section class="content__side">
+                            <p class="content__side-info">Если у вас уже есть аккаунт, авторизуйтесь на сайте</p>
+                            <a class="button button--transparent content__side-button" href="<?= "?login"; ?>">Войти</a>
+                        </section>
+                    <?php endif; ?>
 
             <main class="content__main">
                 <?= $content; ?>
