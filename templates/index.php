@@ -18,7 +18,8 @@
                         <a href="<?= "?show_completed" ?>">
                             <!--добавить сюда аттрибут "checked", если переменная $show_complete_tasks равна единице-->
                             <input class="checkbox__input visually-hidden" type="checkbox" 
-                            <?= ($show_complete_tasks) ? "checked" : ""; ?>>
+                            <?= ($show_complete_tasks) ? "checked" : ""; ?>
+                            >
                             <span class="checkbox__text">Показывать выполненные</span>
                         </a>
                     </label>
@@ -26,8 +27,9 @@
 
                 <table class="tasks">
                     <?php foreach ($project_tasks as $task): ?>
-                        <tr class="tasks__item task  <?=($task["realized"]) ? "task--completed" : ""; ?>
-                                                    <?= calc_time($task["date"]) ? "task--important" : ""; ?>">
+                        <tr class="tasks__item task  
+                                 <?=($task["realized"]) ? "task--completed" : ""; ?>
+                                 <?= calc_time($task["date"]) ? "task--important" : ""; ?>">
                             <td class="task__select">
                                 <label class="checkbox task__checkbox">
                                     <input
