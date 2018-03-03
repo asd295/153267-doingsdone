@@ -30,6 +30,7 @@ CREATE TABLE tasks (
     FOREIGN KEY (project_id) REFERENCES projects (id) on delete cascade,
     FOREIGN KEY (user_id) REFERENCES users (id) on delete cascade,
     fact_date timestamp default now(),
+    done_date timestamp default,
     realized timestamp null,
     name varchar(255) not null,
     filename varchar(255) null,

@@ -24,10 +24,10 @@ function upload_file ($file) {
 function number_of_tasks ($tasks, $project) {
     $count = 0;
     foreach ($tasks as $task) {
-        if ($project === "Все") {
+        if ($project_id === 0) {
             $count = count($tasks);
         }
-        if ($task["category"] === $project) {
+        if ($task["project_id"] === $project_id) {
             $count++;
         }
     }
@@ -58,26 +58,75 @@ function search_user_by_email($db_connect, $email) {
 }
 
 
-function filter_tasks ($tasks, $project, $show_complete_tasks) {
+function filter_tasks ($tasks, $project_id, $show_complete_tasks) {
     $filtered_tasks = [];
-    if ($show_complete_tasks && $project === "Все") {
+     if ($show_complete_tasks && $project_id === 0) {
         $filtered_tasks = $tasks;
     }
     foreach ($tasks as $key => $task) {
         if ($show_complete_tasks) {
-            if ($project === $task["category"]) {
+            if ($project_id === $task["project_id"]) {
                 $filtered_tasks[] = $tasks[$key];
             }
         } else {
-            if ($project === "Все" && !$task["realized"]) {
+            if ($project === 0 && !$task["realized"]) {
                 $filtered_tasks[] = $tasks[$key];
             }
-            if ($project === $task["category"] && !$task["realized"]) {
+            if ($project_id === $task["project_id"] && !$task["realized"]) {
                 $filtered_tasks[] = $tasks[$key];
             }
         }
     }
     return $filtered_tasks;
+}
+
+function get_user_id ($db_connect, $email) {
+    $sql_query = "SELECT `id` FROM `users` WHERE `email` = ?";
+    $statement = mysqli_prepare($db_connect, $sql_query);
+    mysqli_stmt_bind_param($statement, "s", $email);
+    $execute = mysqli_stmt_execute($statement);
+    if (!$execute) {
+        print(mysqli_error($db_connect));
+        exit;
+    }
+    $result = mysqli_stmt_get_result($statement);
+    return mysqli_fetch_row($result)[0];
+}
+
+function get_projects ($db_connect, $user_id) {
+    $projects = [
+        [
+            "id" => 0,
+            "name" => "Все"
+        ]
+    ];
+    $sql_query = "SELECT `id`, `name` FROM `projects` WHERE `user_id` = ?";
+    $statement = mysqli_prepare($db_connect, $sql_query);
+    mysqli_stmt_bind_param($statement, "i", $user_id);
+    $execute = mysqli_stmt_execute($statement);
+    if (!$execute) {
+        print(mysqli_error($db_connect));
+        exit;
+    }
+    $result = mysqli_stmt_get_result($statement);
+    $fetch = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    foreach ($fetch as $project) {
+        $projects[] = $project;
+    }
+    return $projects;
+}
+
+function get_tasks ($db_connect, $user_id) {
+    $sql_query = "SELECT `realized`, `name`, `image_url`, `end_date`, `project_id` FROM `tasks` WHERE `user_id` = ?";
+    $statement = mysqli_prepare($db_connect, $sql_query);
+    mysqli_stmt_bind_param($statement, "i", $user_id);
+    $execute = mysqli_stmt_execute($statement);
+    if (!$execute) {
+        print(mysqli_error($db_connect));
+        exit;
+    }
+    $result = mysqli_stmt_get_result($statement);
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 
 ?>
