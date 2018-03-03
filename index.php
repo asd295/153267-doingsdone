@@ -1,68 +1,19 @@
 <?php
-
 require ('functions.php');
 require_once("database.php");
-
 // показывать или нет выполненные задачи
-$show_complete_tasks = rand(0, 1);
+$show_complete_tasks = 0;
 $add_task = null;
 $project_id = 0;
 $PROJECT_ALL_TASKS = 0;
 
-$projects = [
-    "Все",
-    "Входящие",
-    "Учеба",
-    "Работа",
-    "Домашние дела",
-    "Авто"
-];
 
-$tasks = [
-    [
-        "task" => "Собеседование в IT компании",
-        "date" => "01.06.2018",
-        "category" => $projects[3],
-        "realized" => false
-    ],
-    [
-        "task" => "Выполнить тестовое задание",
-        "date" => "25.05.2018",
-        "category" => $projects[3],
-        "realized" => false
-    ],
-    [
-        "task" => "Сделать задание первого раздела",
-        "date" => "21.04.2018",
-        "category" => $projects[2],
-        "realized" => true
-    ],
-    [
-        "task" => "Встреча с другом",
-        "date" => "22.04.2018",
-        "category" => $projects[1],
-        "realized" => false
-    ],
-    [
-        "task" => "Купить корм для кота",
-        "date" => "",
-        "category" => $projects[4],
-        "realized" => false
-    ],
-    [
-        "task" => "Заказать пиццу",
-        "date" => "",
-        "category" => $projects[4],
-        "realized" => false
-    ]
-];
+$user_id = (isset($_SESSION["user"])) ? get_user_id($connection, $_SESSION["user"]["email"]) : [];
+$projects = (isset($_SESSION["user"])) ? get_projects($connection, $user_id) : [];
+$tasks = (isset($_SESSION["user"])) ? get_tasks($connection, $user_id) : [];
 
 
-if (isset($_GET["add_task"])) {
-    $add_task = renderTemplate("templates/modal-task.php", [
-        "projects" => array_slice($projects, 1)
-    ]);
-}
+
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (isset($_POST['add_task'])) {
@@ -87,34 +38,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         } else {
             $format_date = date("d.m.Y", strtotime($_POST["date"]));
         }
-        array_unshift($tasks, [
-            "task" => $_POST["name"],
-            "date" => $format_date,
-            "category" => $_POST["project"],
-            "file_name" => $_FILES["preview"]["name"],
-            "file_url" => upload_file($_FILES["preview"]),
-            "realized" => false
-        ]);
     }
 }
-
-
-
-if (isset($_GET["project_id"])) {
-    $project_id = (int) $_GET["project_id"];
-    $project_tasks = [];
-    if ($project_id === $PROJECT_ALL_TASKS) {
-        $project_tasks = filter_tasks($tasks, $projects[$PROJECT_ALL_TASKS], $show_complete_tasks);
-    } elseif (isset($projects[$project_id])) {
-        $project_tasks = filter_tasks($tasks, $projects[$project_id], $show_complete_tasks);
-    } else {
-        http_response_code(404);
-        $message = "Проектов с таким id не найдено.";
-    }
-} else {
-    $project_tasks = filter_tasks($tasks, $projects[$PROJECT_ALL_TASKS], $show_complete_tasks);
-}
-
 
 if (isset($_COOKIE["showcompl"])) {
     $show_complete_tasks = ($_COOKIE["showcompl"] == 1) ? 0 : 1;
@@ -126,6 +51,26 @@ if (isset($_GET["show_completed"])) {
 
 session_start();
 if (isset($_SESSION["user"])) {
+        if (isset($_GET["project_id"])) {
+            $project_id = (int) $_GET["project_id"];
+            $project_tasks = [];
+            if ($project_id === $PROJECT_ALL_TASKS) {
+                $project_tasks = filter_tasks($tasks, $projects[$PROJECT_ALL_TASKS]["id"], $show_complete_tasks);
+            } elseif (isset($projects[$project_id])) {
+                $project_tasks = filter_tasks($tasks, $projects[$project_id]["id"], $show_complete_tasks);
+            } else {
+                http_response_code(404);
+                $message = "Проектов с таким id не найдено.";
+            }
+        } else {
+            $project_tasks = filter_tasks($tasks, $projects[$PROJECT_ALL_TASKS]["id"], $show_complete_tasks);
+        }
+        if (isset($_GET["add_task"])) {
+    $add_task = renderTemplate("templates/modal-task.php", [
+        "projects" => array_slice($projects, 1)
+    ]);
+}
+
     if (http_response_code() === 404) {
         $page = renderTemplate("templates/404.php", [
             "message" => $message
@@ -142,7 +87,6 @@ if (isset($_SESSION["user"])) {
     if (isset($_GET["login"])) {
         $add_task = renderTemplate("templates/modal-auth.php", []);
     }
-
     if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["login"])) {
         $errors = [];
         $required_fields = [
@@ -176,21 +120,15 @@ if (isset($_SESSION["user"])) {
         }
     }
 }
-
 if (isset($_GET["register"])) {
     $page = renderTemplate("templates/register.php", []);
 }
-
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["register"])) {
     require_once("register.php");
 }
-
 if (isset($_GET["logout"])) {
     require_once("logout.php");
 }
-
-
-
 $layout = renderTemplate("templates/layout.php", [
     "title" => "Дела в порядке",
     "content" => $page,
@@ -199,7 +137,6 @@ $layout = renderTemplate("templates/layout.php", [
     "tasks" => $tasks,
     "project_id" => $project_id
 ]);
-
 print($layout);
 ?>
 

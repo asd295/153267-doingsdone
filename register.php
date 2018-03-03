@@ -18,7 +18,7 @@ if ($_POST["email"] === $user["email"]) {
     $errors["email"] = "Этот e-mail уже используется";
 }
 if (count($errors)) {
-    $page = set_template("templates/register.php", [
+    $page = renderTemplate("templates/register.php", [
         "errors" => $errors
     ]);
 } else {
