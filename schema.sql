@@ -16,7 +16,8 @@ CREATE TABLE users (
 
 CREATE TABLE projects (
     id int auto_increment primary key,
-    name varchar(255) not null
+    name varchar(255) not null,
+    user_id int NOT NULL
 );
 
 -- fact_date - дата записи задачи по факту в бд
