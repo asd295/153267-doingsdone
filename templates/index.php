@@ -84,8 +84,8 @@
                 </label>
             </td>
             <td class="task__file">
-                <?php if (!empty($task["file"])): ?>
-                    <a class="download-link" href="<?= $task["file"]; ?>"><?= $task["file"]; ?></a>
+                <?php if (!empty($task["image_url"])): ?>
+                    <a class="download-link" href="<?= $task["image_url"]; ?>"><?= $task["image_url"]; ?></a>
                 <?php endif; ?>
             </td>
             <td class="task__date">

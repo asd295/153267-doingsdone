@@ -167,7 +167,6 @@ if (isset($_GET["register"])) {
 
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["register"])) {
     require_once("register.php");
-    header("Location: index.php?login");
 }
 
 if (isset($_GET["logout"])) {

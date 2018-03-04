@@ -12,7 +12,7 @@ INSERT INTO projects SET name = "Учеба", user_id = 1;
 INSERT INTO projects SET name = "Домашние дела", user_id = 1;
 INSERT INTO projects SET name = "Авто", user_id = 1;
 
---добавление задач 
+-- добавление задач 
 
 INSERT INTO tasks SET 
   name = 'Собеседование в IT компании',
