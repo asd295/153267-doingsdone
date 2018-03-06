@@ -6,7 +6,6 @@ INSERT INTO users SET email = 'warrior07@mail.ru', name = 'Руслан', passwo
 
 -- добавление список проектов в таблицу projects
 
-INSERT INTO projects SET name = "Все", user_id = 1;
 INSERT INTO projects SET name = "Входящие", user_id = 1;
 INSERT INTO projects SET name = "Учеба", user_id = 1;
 INSERT INTO projects SET name = "Домашние дела", user_id = 1;
