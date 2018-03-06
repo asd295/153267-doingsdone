@@ -7,7 +7,7 @@
             type="text"
             name="email"
             id="email"
-            value="<?= (isset($_POST["email"])) ? $_POST["email"] : ""; ?>"
+            value="<?= (isset($_POST["email"])) ? htmlspecialchars ($_POST["email"]) : ""; ?>"
             placeholder="Введите e-mail"
         >
         <?php if (isset($errors["email"])): ?>
@@ -39,7 +39,7 @@
             type="text"
             name="name"
             id="name"
-            value="<?= (isset($_POST["name"])) ? $_POST["name"] : ""; ?>"
+            value="<?= (isset($_POST["name"])) ? htmlspecialchars (strip_tags($_POST["name"])) : ""; ?>"
             placeholder="Введите имя"
         >
         <?php if (isset($errors["name"])): ?>

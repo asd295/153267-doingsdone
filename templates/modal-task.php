@@ -13,7 +13,7 @@
         type="text"
         name="name"
         id="name"
-        value="<?= (isset($_POST["name"])) ? $_POST["name"] : ""; ?>"
+        value="<?= (isset($_POST["name"])) ? htmlspecialchars ($_POST["name"]) : ""; ?>"
         placeholder="Введите название"
       >
       <?php if (isset($errors["name"])): ?>
@@ -37,12 +37,12 @@
         <option value="">---</option>
         <?php foreach ($projects as $project): ?>
           <option
-            value="<?= $project ["name"]; ?>"
+            value="<?= (isset($project["name"])) ? htmlspecialchars($project["name"]) : ""; ?>"
             <?php if (isset($_POST["project"])): ?>
               <?= ($_POST["project"] === $project["name"]) ? "selected" : ""; ?>
             <?php endif; ?>
           >
-            <?= $project ["name"]; ?>
+            <?= (isset($project["name"])) ? htmlspecialchars($project["name"]) : ""; ?>
           </option>
         <?php endforeach; ?>
       </select>

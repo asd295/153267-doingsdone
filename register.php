@@ -25,7 +25,7 @@ if (count($errors)) {
     $user_password = password_hash($_POST["password"], PASSWORD_DEFAULT);
     $save_user_sql_query = "INSERT INTO `users` SET `signup_date` = NOW(), `email` = ?, `password` = ?, `name` = ?";
     $save_user_statement = mysqli_prepare($connection, $save_user_sql_query);
-    mysqli_stmt_bind_param($save_user_statement, "sss", $_POST["email"], $user_password, $_POST["name"]);
+    mysqli_stmt_bind_param($save_user_statement, "sss", $_POST["email"], $user_password, htmlspecialchars (strip_tags($_POST["name"])));
     $save_user_execute = mysqli_stmt_execute($save_user_statement);
     if (!$save_user_execute) {
         print(mysqli_error($connection));

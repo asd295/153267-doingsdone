@@ -13,7 +13,7 @@
                 type="text"
                 name="email"
                 id="email"
-                value="<?= (isset($_POST["email"]) ? $_POST["email"] : "") ?>" placeholder="Введите e-mail"
+                value="<?= (isset($_POST["email"]) ? htmlspecialchars ($_POST["email"]) : "") ?>" placeholder="Введите e-mail"
             >
 
             <?php if (isset($errors["email"])): ?>

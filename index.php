@@ -8,12 +8,12 @@ $PROJECT_ALL_TASKS = 0;
 $project_id = 0;
 $show_complete_tasks = 0;
 
-
 $page = renderTemplate("templates/guest.php", []);
 $add_task = null;
 $user_id = (isset($_SESSION["user"])) ? get_user_id($connection, $_SESSION["user"]["email"]) : [];
 $projects = (isset($_SESSION["user"])) ? get_projects($connection, $user_id) : [];
 $tasks = (isset($_SESSION["user"])) ? get_tasks($connection, $user_id) : [];
+
 
 
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["add_project"])) {
@@ -26,12 +26,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["add_project"])) {
             $errors[$field] = "Поле обязательно для заполнения";
         }
     }
+     foreach ($projects as $project) {
+        if (mb_strtolower(trim($_POST["name"]), "UTF-8") === mb_strtolower($project["name"], "UTF-8")) {
+            $errors["name"] = "Проект с таким названием уже существует";
+        }
+    }
     if (count($errors)) {
         $add_task = renderTemplate("templates/modal-project.php", [
             "errors" => $errors
         ]);
     } else {
-        add_project($connection, $user_id, $_POST["name"]);
+        add_project($connection, $user_id, htmlspecialchars (strip_tags($_POST["name"])));
     }
 }
 
@@ -56,20 +61,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["add_task"])) {
         $file = (!empty($_FILES["preview"]["name"])) ? $_FILES["preview"] : null;
         add_task(
             $connection,
-            $_POST["name"],
+           htmlspecialchars(strip_tags($_POST["name"])),
             upload_file($file),
             $date,
             get_user_id($connection, $_SESSION["user"]["email"]),
-            get_project_id($connection, $_POST["project"])
+            get_project_id($connection, htmlspecialchars (strip_tags($_POST["project"])))
         );
     }
 }
 
-if (isset($_GET["toggle_done"])) {
-    $task_id = (int) $_GET["toggle_done"];
-    toggle_done($connection, $task_id);
-    header("Location: " . $_SERVER["HTTP_REFERER"]);
-}
 
 if (isset($_COOKIE["showcompl"])) {
     $show_complete_tasks = ((int) $_COOKIE["showcompl"] === 1) ? 0 : 1;
@@ -106,6 +106,12 @@ if (isset($_SESSION["user"])) {
     } else {
         $project_tasks = filter_tasks($tasks, $projects[$PROJECT_ALL_TASKS]["id"], $show_complete_tasks);
     }
+    if (isset($_GET["toggle_done"])) {
+        $task_id = (int) $_GET["toggle_done"];
+        toggle_done($connection, $task_id, $user_id);
+        header("Location: " . $_SERVER["HTTP_REFERER"]);
+    }
+
     if (isset($_COOKIE["filter"])) {
         $filter = $_COOKIE["filter"];
         $project_tasks = filter_tasks_advanced($project_tasks, $filter);
@@ -174,13 +180,14 @@ if (isset($_GET["logout"])) {
      header("Location: index.php");
 }
 
+
 $layout = renderTemplate("templates/layout.php", [
     "title" => "Дела в порядке",
     "content" => $page,
     "add_task" => $add_task,
     "projects" => $projects,
     "project_id" => $project_id,
-    "tasks" => $tasks
+    "tasks" => $tasks,
 ]);
 
 print($layout);

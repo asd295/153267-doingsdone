@@ -1,5 +1,5 @@
 <div class="modal">
-   <a href="index.php">
+    <a href="/">
         <button class="modal__close" type="button" name="button">Закрыть</button>
     </a>
     <h2 class="modal__heading">Добавление проекта</h2>
@@ -11,7 +11,7 @@
                 type="text"
                 name="name"
                 id="project_name"
-                value=""
+                value="<?= (isset($_POST["name"]) ? htmlspecialchars($_POST["name"]) : "") ?>"
                 placeholder="Введите название проекта"
             >
             <?php if (isset($errors["name"])): ?>

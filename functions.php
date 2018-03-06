@@ -35,7 +35,7 @@ function add_project ($db_connect, $user_id, $project_name) {
 }
 
 
-// добавляем проект sql запросом
+// добавляем задачу sql запросом
 // mysqli $db_connect Ресурс подключения
 // integer $user_id ID пользователя
 // string $project_name Имя проекта
@@ -228,7 +228,7 @@ function get_project_id ($db_connect, $project_name) {
 // return array Массив с проектами
 
 function get_tasks ($db_connect, $user_id) {
-    $sql_query = "SELECT `realized`, `name`, `image_url`, `end_date`, `project_id` FROM `tasks` WHERE `user_id` = ?";
+    $sql_query = "SELECT `id`, `realized`, `name`, `image_url`, `end_date`, `project_id` FROM `tasks` WHERE `user_id` = ?";
     $statement = mysqli_prepare($db_connect, $sql_query);
     mysqli_stmt_bind_param($statement, "i", $user_id);
     $execute = mysqli_stmt_execute($statement);
@@ -273,30 +273,34 @@ function filter_tasks_advanced ($tasks, $filter) {
 // param string $task_id ID задачи
 // string Значение поля даты выполнения задачи
 
-function toggle_done ($db_connect, $task_id) {
-    $sql_query = "SELECT `done_date` FROM `tasks` WHERE `id` = ?";
+
+function toggle_done ($db_connect, $task_id, $user_id) {
+    $sql_query = "SELECT * FROM `tasks` WHERE `id` = ? AND `user_id` = ?";
     $statement = mysqli_prepare($db_connect, $sql_query);
-    mysqli_stmt_bind_param($statement, "i", $task_id);
+    mysqli_stmt_bind_param($statement, "ii", $task_id, $user_id);
     $execute = mysqli_stmt_execute($statement);
     if (!$execute) {
         print(mysqli_error($db_connect));
         exit;
     }
     $result = mysqli_stmt_get_result($statement);
-    $done_date = mysqli_fetch_row($result)[0];
-    if ($done_date) {
-        $sql_query = "UPDATE `tasks` SET `realized` = NULL WHERE `id` = ?";
+    if (!mysqli_num_rows($result)) {
+        print(mysqli_error($db_connect));
+        exit;
+    }
+    $task = mysqli_fetch_array($result);
+    if ($task["realized"]) {
+        $sql_query = "UPDATE `tasks` SET `realized` = NULL WHERE `id` = ? AND `user_id` = ?";
     } else {
-        $sql_query = "UPDATE `tasks` SET `realized` = NOW() WHERE `id` = ?";
+        $sql_query = "UPDATE `tasks` SET `realized` = NOW() WHERE `id` = ? AND `user_id` = ?";
     }
     $statement = mysqli_prepare($db_connect, $sql_query);
-    mysqli_stmt_bind_param($statement, "i", $task_id);
+    mysqli_stmt_bind_param($statement, "ii", $task_id, $user_id);
     $execute = mysqli_stmt_execute($statement);
     if (!$execute) {
         print(mysqli_error($db_connect));
         exit;
     }
-    return $done_date;
 }
 
 ?>
